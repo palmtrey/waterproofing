@@ -15,12 +15,14 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 if __name__ == '__main__':
 
-    depth_offset_factors = list(np.arange(0.5, 5.0, 0.5))
+    output_file = 'results_fine.json'
+
+    depth_offset_factors = list(np.arange(0.1, 1.1, 0.1))
     depth_offset_factors = [round(x, 2) for x in depth_offset_factors]
     
-    truncation_factors = list(np.arange(2, 20, 2))
+    truncation_factors = [2]
     
-    padding_factors = list(np.arange(0.05, 0.5, 0.05))
+    padding_factors = list(np.arange(0.001, 0.101, 0.01))
     padding_factors = [round(x, 3) for x in padding_factors]
     
 
@@ -65,7 +67,7 @@ if __name__ == '__main__':
                 print('Approximate time remaining: ' + str(datetime.timedelta(seconds=round((after-before) * (total_comparisons-complete_comparisons)))))
                 print('--------------------------------------------------\n')
 
-                with open('results.json', 'w') as f:
+                with open(output_file, 'w') as f:
                     json.dump(results, f)
 
                 # break

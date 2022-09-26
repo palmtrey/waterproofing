@@ -1,5 +1,7 @@
 import json
+import matplotlib.pyplot as plt
 from MendNet.mendnet.python.core import metrics
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
 import trimesh
@@ -64,6 +66,52 @@ def modified_gradient_descent(depth_offset_factor: float, truncation_factor: flo
 
 
 def plot_results(json_file: str) -> None:
+    """Loads a compare results dict from a json file and plots the data in 4D.
 
-    with json.load(json_file) as f:
-        
+    Loads from a json file containing a dumped dictionary in the form:
+        {'depth offset factor: ' + str(depth_offset_factor) + ', truncation factor: ' + str(truncation_factor) + ', padding factor: ' + str(padding factor): chamfer_distance}
+    
+    The 4-dimensional data is then plotted in 4D.
+
+    Args:
+        json_file: The path to the json file to load from.
+    
+    Returns:
+        None.
+    
+    """
+
+    data_dict = {}
+
+    depth_offset_factors = []
+    truncation_factors = []
+    padding_factors = []
+    chamfer_distances = []
+
+    with open(json_file, 'r') as f:
+        data_dict = json.load(f)
+    
+    
+    for key in data_dict:
+        chamfer_distances.append(float(data_dict[key]))
+        key = key.split(' ')
+        depth_offset_factors.append(float(key[3].split(',')[0]))
+        truncation_factors.append(float(key[6].split(',')[0]))
+        padding_factors.append(float(key[9]))
+    
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    img = ax.scatter(depth_offset_factors, truncation_factors, padding_factors, c=chamfer_distances, cmap=plt.hot())
+    fig.colorbar(img)
+    ax.set_xlabel('Depth Offset Factor')
+    ax.set_ylabel('Truncation Factor')
+    ax.set_zlabel('Padding Factor')
+    
+    fig.savefig('output3d_fine.png', bbox_inches='tight')
+    
+    # plt.scatter(padding_factors, chamfer_distances)
+    # plt.xlabel('Padding Factor')
+    # plt.ylabel('Chamfer Distance')
+    # plt.savefig('output3.png')
+    
