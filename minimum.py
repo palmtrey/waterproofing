@@ -8,4 +8,4 @@ def minimum(json_file: str):
 
 
 if __name__ == '__main__':
-    print(minimum('depth_offset_factor_results.txt'))
+    print(minimum('results.json'))
